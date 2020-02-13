@@ -1,0 +1,58 @@
+
+    <div class="main_body" id="main_body">
+        <div class="breadcrub">
+            当前位置：文章管理>文章列表
+        </div>
+        <div class="pannel">
+            <span class="sel_label">请选择文章分类：</span>
+            <form action="/article" method="get" id="form">
+            <select name="select" id="select" class="sel_opt">
+                {{range .types}}
+                <option value="{{.Typename}}">{{.Typename}}</option>
+                {{end}}
+            </select>
+            </form>
+
+            <table class="common_table">
+                <tr>
+                    <th width="43%">文章标题</th>
+                    <th width="10%">文章内容</th>
+                    <th width="16%">添加时间</th>
+                    <th width="7%">阅读量</th>
+                    <th width="7%">删除</th>
+                    <th width="7%">编辑</th>
+                    <th width="10%">文章类型</th>
+                </tr>
+                
+                {{range $index,$val:=.article}}
+                <tr>
+                    <td>{{$val.Title}}</td>
+                    <td><a href="/Article/artiContent?id={{$val.Id}}">查看详情</a></td>
+                    <td>{{$val.Time.Format "2006-01-02 15:04:05"}}</td>
+                    <td>{{$val.Count}}</td>
+                    <td><a href="/Article/artiDelete?id={{$val.Id}}" class="dels">删除</a></td>
+                    <td><a href="/Article/artiUpdate?id={{$val.Id}}">编辑</a></td>
+                    <td>{{$val.ArticleType.Typename}}</td>
+                </tr>
+                {{end}}
+            </table>
+
+            <ul class="pagenation">
+                {{if compare .FirstPage true}}
+                <li><a href="javascript:;">首页</a></li>
+                <li><a href="javascript:;">上一页</a></li>
+                {{else}}
+                <li><a href="/Article/article?pageIndex=1">首页</a></li>
+                <li><a href="/Article/article?pageIndex={{.pageIndex | ShowPrePage}}&select={{.typeName}}">上一页</a> </li>
+                {{end}}
+                {{if compare .EndPage true}}
+                <li><a href="javascript:;">下一页</a></li>
+                <li><a href="javascript:;">末页</a></li>
+                {{else}}
+                <li><a href="/Article/article?pageIndex={{.pageIndex | ShowNextPage}}&select={{.typeName}}">下一页</a></li>
+                <li><a href="/Article/article?pageIndex={{.pageCount}}">末页</a></li>
+                {{end}}
+                <li>共{{.count}}条记录 / 共{{.pageCount}}页 / 当前{{.pageIndex}}页</li>
+            </ul>
+        </div>
+    </div>
